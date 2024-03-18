@@ -124,8 +124,8 @@ export const SignUpForm = component$<Props>(
           />
         </label>
         <Slot name="under-email" />
-        <fieldset>
-          <legend>{title?.password || "Valid Password"}</legend>
+        <fieldset class="fields-group">
+          <legend>{title?.password || "Set Password"}</legend>
           <label for="sign_up_password" class="fieldset">
             {fields?.password.label || "Password"}
             <input
