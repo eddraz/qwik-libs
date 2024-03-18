@@ -7,14 +7,16 @@ import {
   onAuthStateChanged,
   signInWithPopup,
   signOut,
+  createUserWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 
 import { FirebaseService } from "./firebase.service";
 import { FirebaseConfigModel } from "../models/firebase-config.model";
 
 export class AuthService {
-  private initApp: FirebaseApp;
-  private auth: Auth;
+  initApp: FirebaseApp;
+  auth: Auth;
 
   constructor(firebaseConfig: FirebaseConfigModel) {
     const app = new FirebaseService(firebaseConfig).app;
@@ -27,18 +29,18 @@ export class AuthService {
     this.auth = getAuth(app);
   }
 
-  async currentUser(): Promise<User | FirebaseError | null> {
-    try {
-      return new Promise((resolve) => {
-        if (this.auth.currentUser) resolve(this.auth.currentUser);
-        else {
-          onAuthStateChanged(this.auth, (user) => {
-            resolve(user);
-          });
+  currentUser(callback: (data: User | FirebaseError | null) => void) {
+    if (this.auth.currentUser) callback(this.auth.currentUser);
+    else {
+      onAuthStateChanged(
+        this.auth,
+        (user) => {
+          callback(user);
+        },
+        (error) => {
+          callback(error as FirebaseError);
         }
-      });
-    } catch (error) {
-      return error as unknown as FirebaseError;
+      );
     }
   }
 
@@ -47,6 +49,37 @@ export class AuthService {
   ): Promise<User | FirebaseError> {
     try {
       const credentials = await signInWithPopup(this.auth, provider);
+      return credentials.user;
+    } catch (error) {
+      return error as unknown as FirebaseError;
+    }
+  }
+
+  async signUpWithEmailAndPassword(
+    email: string,
+    password: string,
+    moreInfo?: { displayName?: string }
+  ): Promise<User | FirebaseError> {
+    try {
+      if (!email || !password) {
+        throw new Error("Email and password are required");
+      }
+      if (password.length < 6) {
+        throw new Error("Password must be at least 6 characters long");
+      }
+
+      const credentials = await createUserWithEmailAndPassword(
+        this.auth,
+        email,
+        password
+      );
+
+      if (moreInfo?.displayName) {
+        await updateProfile(credentials.user, {
+          displayName: moreInfo.displayName,
+        });
+      }
+
       return credentials.user;
     } catch (error) {
       return error as unknown as FirebaseError;
