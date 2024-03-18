@@ -83,20 +83,20 @@ export const SignUpForm = component$<Props>(
         }}
       >
         <div class="fieldset">
-          <label for="name">{fields.name.label || "Name"}</label>
+          <label for="sign_up_name">{fields.name.label || "Name"}</label>
           <input
             type="text"
-            id="name"
+            id="sign_up_name"
             name="name"
             placeholder={fields.name.placeholder || "Name"}
             bind:value={name}
           />
         </div>
         <div class="fieldset">
-          <label for="email">{fields.email.label || "Email"}</label>
+          <label for="sign_up_email">{fields.email.label || "Email"}</label>
           <input
             type="email"
-            id="email"
+            id="sign_up_email"
             name="email"
             autocapitalize="none"
             placeholder={fields.email.placeholder || "Email"}
@@ -104,10 +104,12 @@ export const SignUpForm = component$<Props>(
           />
         </div>
         <div class="fieldset">
-          <label for="password">{fields.password.label || "Password"}</label>
+          <label for="sign_up_password">
+            {fields.password.label || "Password"}
+          </label>
           <input
             type="password"
-            id="password"
+            id="sign_up_password"
             name="password"
             placeholder={fields.password.placeholder || "Password"}
             bind:value={password}
