@@ -1,5 +1,6 @@
 import { Auth } from "./components/auth";
 import { GoogleAuthenticator } from "./components/google-authenticator";
+import { BrandGoogleFilledIcon } from "./components/icons/brand-google-filled";
 
 import { CRYPTER } from "./utils/crypter.util";
 
@@ -24,12 +25,7 @@ export default () => {
         <Auth firebaseConfig={firebaseConfig}>
           <GoogleAuthenticator>
             Signin with Google
-            <img
-              src="https://www.svgrepo.com/show/327365/logo-google.svg"
-              alt="Logo de Google"
-              width={30}
-              height={30}
-            />
+            <BrandGoogleFilledIcon color="#fffffff" height="24" width="24" />
           </GoogleAuthenticator>
         </Auth>
       </body>
