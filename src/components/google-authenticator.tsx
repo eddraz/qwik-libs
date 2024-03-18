@@ -9,6 +9,7 @@ import {
   useVisibleTask$,
 } from "@builder.io/qwik";
 import { FirebaseConfigContext } from "./auth";
+import { ChevronDownIcon } from "./icons/chevron-down";
 import { UserModel } from "../models/user.model";
 
 import { CRYPTER } from "../utils/crypter.util";
@@ -21,6 +22,7 @@ interface Props {}
 export const GoogleAuthenticator = component$<Props>(() => {
   const firebaseConfig = useContext(FirebaseConfigContext);
   const userSigned = useSignal<UserModel>();
+  const profileButtonList = useSignal<boolean>();
 
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(async () => {
@@ -46,14 +48,35 @@ export const GoogleAuthenticator = component$<Props>(() => {
   return (
     <>
       {userSigned.value ? (
-        <button class="btn btn-profile-signed">
-          <span>
-            <strong>{userSigned.value.displayName}</strong>
-            <small>{userSigned.value.email}</small>
-            {/* <button
+        <div class="btn-list">
+          <button
+            class="btn btn-profile-signed"
+            onClick$={() =>
+              (profileButtonList.value = !profileButtonList.value)
+            }
+          >
+            <span>
+              <strong>{userSigned.value.displayName}</strong>
+              <small>{userSigned.value.email}</small>
+            </span>
+            {userSigned.value.photoURL && (
+              <img
+                src={userSigned.value.photoURL}
+                alt={`Foto de perfil de ${userSigned.value.displayName}`}
+                width={70}
+                height={70}
+              />
+            )}
+            <ChevronDownIcon color="#000000" width="20" height="20" />
+          </button>
+          {profileButtonList.value && (
+            <button
+              class="btn-sign-out"
               onClick$={async () => {
                 try {
-                  await new AuthService(firebaseConfig).signOut();
+                  await new AuthService(
+                    JSON.parse(CRYPTER.decrypt(firebaseConfig))
+                  ).signOut();
                   userSigned.value = undefined;
                 } catch (error) {
                   console.error("Error signing out", error);
@@ -61,17 +84,9 @@ export const GoogleAuthenticator = component$<Props>(() => {
               }}
             >
               Salir
-            </button> */}
-          </span>
-          {userSigned.value.photoURL && (
-            <img
-              src={userSigned.value.photoURL}
-              alt={`Foto de perfil de ${userSigned.value.displayName}`}
-              width={70}
-              height={70}
-            />
+            </button>
           )}
-        </button>
+        </div>
       ) : (
         <button
           class="btn btn-signin-google"
