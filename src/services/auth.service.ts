@@ -10,6 +10,7 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 
 import { FirebaseService } from "./firebase.service";
@@ -51,6 +52,14 @@ export class AuthService {
     try {
       const credentials = await signInWithPopup(this.auth, provider);
       return credentials.user;
+    } catch (error) {
+      return error as unknown as FirebaseError;
+    }
+  }
+
+  async sendPasswordResetEmail(email: string): Promise<void | FirebaseError> {
+    try {
+      return await sendPasswordResetEmail(this.auth, email);
     } catch (error) {
       return error as unknown as FirebaseError;
     }
