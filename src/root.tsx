@@ -1,9 +1,9 @@
-import { Auth } from "./components/auth";
-import { ForgotPasswordForm } from "./components/forgot-password-form";
-import { GoogleAuthenticator } from "./components/google-authenticator";
+import { Auth } from "./components/auth/auth";
+import { ForgotPasswordForm } from "./components/auth/forgot-password-form";
+import { GoogleAuthenticator } from "./components/auth/google-authenticator";
 import { BrandGoogleFilledIcon } from "./components/icons/brand-google-filled";
-import { SignUpForm } from "./components/sign-up-form";
-import { SigninForm } from "./components/signin-form";
+import { SignUpForm } from "./components/auth/sign-up-form";
+import { SigninForm } from "./components/auth/signin-form";
 
 import { CRYPTER } from "./utils/crypter.util";
 

@@ -2,10 +2,10 @@ import { FirebaseError } from "firebase/app";
 
 import { QRL, Slot, component$, useContext, useSignal } from "@builder.io/qwik";
 import { FirebaseConfigContext } from "./auth";
-import { UserModel } from "../models/user.model";
+import { UserModel } from "../../models/user.model";
 
-import { CRYPTER } from "../utils/crypter.util";
-import { AuthService } from "../services/auth.service";
+import { CRYPTER } from "../../utils/crypter.util";
+import { AuthService } from "../../services/auth.service";
 
 import "./sign-up-form.css";
 

@@ -1,1 +1,1 @@
-export { GoogleAuthenticator } from "./components/google-authenticator";
+export { GoogleAuthenticator } from "./components/auth/google-authenticator";

@@ -2,11 +2,12 @@ import { FirebaseError } from "firebase/app";
 
 import { QRL, Slot, component$, useContext, useSignal } from "@builder.io/qwik";
 import { FirebaseConfigContext } from "./auth";
+import { UserModel } from "../../models/user.model";
 
-import { CRYPTER } from "../utils/crypter.util";
-import { AuthService } from "../services/auth.service";
+import { CRYPTER } from "../../utils/crypter.util";
+import { AuthService } from "../../services/auth.service";
 
-import "./forgot-password-form.css";
+import "./signin-form.css";
 
 interface Props {
   fields?: {
@@ -15,18 +16,25 @@ interface Props {
       placeholder: string;
       value: string;
     };
+    password: {
+      label: string;
+      placeholder: string;
+      value: string;
+    };
   };
   buttons?: {
     submit: string;
   };
-  onSended$?: QRL<() => void>;
+  onSignIn$?: QRL<(user: UserModel) => void>;
   onError$?: QRL<(error: FirebaseError) => void>;
 }
 
-export const ForgotPasswordForm = component$<Props>(
-  ({ fields, buttons, onSended$, onError$ }) => {
+export const SigninForm = component$<Props>(
+  ({ fields, buttons, onSignIn$, onError$ }) => {
     const firebaseConfig = useContext(FirebaseConfigContext);
+    const userSigned = useSignal<UserModel>();
     const email = useSignal<string>(fields?.email.value || "");
+    const password = useSignal<string>(fields?.password.value || "");
 
     return (
       <form
@@ -38,14 +46,25 @@ export const ForgotPasswordForm = component$<Props>(
           try {
             const user = await new AuthService(
               JSON.parse(CRYPTER.decrypt(firebaseConfig))
-            ).sendPasswordResetEmail(email.value);
+            ).signinWithEmailAndPassword(email.value, password.value);
 
             if (user instanceof FirebaseError) {
               console.error("Error signing in with Google", user);
               return;
             }
 
-            onSended$ && onSended$();
+            userSigned.value = {
+              disabled: false,
+              email: user?.email,
+              displayName: user?.displayName,
+              photoURL: user?.photoURL,
+              uid: user?.uid,
+              emailVerified: user?.emailVerified,
+              phoneNumber: user?.phoneNumber,
+              provider: user?.providerId as UserModel["provider"],
+            };
+
+            onSignIn$ && onSignIn$(userSigned.value);
           } catch (error: any) {
             onError$ &&
               onError$({
@@ -58,20 +77,31 @@ export const ForgotPasswordForm = component$<Props>(
           }
         }}
       >
-        <label for="forgot_password_email" class="fieldset">
+        <label for="signin_email" class="fieldset">
           {fields?.email.label || "Email"}
           <input
             type="email"
-            id="forgot_password_email"
+            id="signin_email"
             name="email"
             autocapitalize="none"
             placeholder={fields?.email.placeholder || "Email"}
             bind:value={email}
           />
         </label>
-        <Slot name="under-name" />
+        <Slot name="under-email" />
+        <label for="signin_password" class="fieldset">
+          {fields?.password.label || "Password"}
+          <input
+            type="password"
+            id="signin_password"
+            name="password"
+            placeholder={fields?.password.placeholder || "Password"}
+            bind:value={password}
+          />
+        </label>
+        <Slot name="under-password" />
         <button type="submit" class="submit">
-          {buttons?.submit || "Forgot Password?"}
+          {buttons?.submit || "Signin"}
         </button>
       </form>
     );
