@@ -2,6 +2,7 @@ import { Auth } from "./components/auth";
 import { GoogleAuthenticator } from "./components/google-authenticator";
 import { BrandGoogleFilledIcon } from "./components/icons/brand-google-filled";
 import { SignUpForm } from "./components/sign-up-form";
+import { SigninForm } from "./components/signin-form";
 
 import { CRYPTER } from "./utils/crypter.util";
 
@@ -37,6 +38,26 @@ export default () => {
                 placeholder: "Your name",
                 value: "",
               },
+              email: {
+                label: "Email",
+                placeholder: "Your email",
+                value: "",
+              },
+              password: {
+                label: "Password",
+                placeholder: "Your password",
+                value: "",
+              },
+            }}
+            onSignIn$={(values) => {
+              console.log(values);
+            }}
+            onError$={(error) => {
+              console.error(error);
+            }}
+          />
+          <SigninForm
+            fields={{
               email: {
                 label: "Email",
                 placeholder: "Your email",
