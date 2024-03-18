@@ -1,4 +1,5 @@
 import { Auth } from "./components/auth";
+import { ForgotPasswordForm } from "./components/forgot-password-form";
 import { GoogleAuthenticator } from "./components/google-authenticator";
 import { BrandGoogleFilledIcon } from "./components/icons/brand-google-filled";
 import { SignUpForm } from "./components/sign-up-form";
@@ -31,6 +32,7 @@ export default () => {
           </GoogleAuthenticator>
         </Auth>
         <Auth firebaseConfig={firebaseConfig}>
+          <h1>Sign Up</h1>
           <SignUpForm
             fields={{
               name: {
@@ -48,6 +50,14 @@ export default () => {
                 placeholder: "Your password",
                 value: "",
               },
+              passwordConfirm: {
+                label: "Confirm Password",
+                placeholder: "Confirm your password",
+                value: "",
+                validator: {
+                  passwordDoNotMatch: "Password do not match",
+                },
+              },
             }}
             onSignIn$={(values) => {
               console.log(values);
@@ -56,21 +66,23 @@ export default () => {
               console.error(error);
             }}
           />
+          <h1>Signin</h1>
           <SigninForm
-            fields={{
-              email: {
-                label: "Email",
-                placeholder: "Your email",
-                value: "",
-              },
-              password: {
-                label: "Password",
-                placeholder: "Your password",
-                value: "",
-              },
-            }}
             onSignIn$={(values) => {
               console.log(values);
+            }}
+            onError$={(error) => {
+              console.error(error);
+            }}
+          >
+            <div q:slot="under-password" align="right">
+              <a href="/">Forgot password?</a>
+            </div>
+          </SigninForm>
+          <h1>Recovery Password</h1>
+          <ForgotPasswordForm
+            onSended$={() => {
+              console.log("sended message");
             }}
             onError$={(error) => {
               console.error(error);
