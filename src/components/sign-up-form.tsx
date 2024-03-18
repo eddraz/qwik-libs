@@ -1,6 +1,6 @@
 import { FirebaseError } from "firebase/app";
 
-import { QRL, component$, useContext, useSignal } from "@builder.io/qwik";
+import { QRL, Slot, component$, useContext, useSignal } from "@builder.io/qwik";
 import { FirebaseConfigContext } from "./auth";
 import { UserModel } from "../models/user.model";
 
@@ -10,7 +10,10 @@ import { AuthService } from "../services/auth.service";
 import "./sign-up-form.css";
 
 interface Props {
-  fields: {
+  title?: {
+    password: string;
+  };
+  fields?: {
     name: {
       label: string;
       placeholder: string;
@@ -26,18 +29,30 @@ interface Props {
       placeholder: string;
       value: string;
     };
+    passwordConfirm: {
+      label: string;
+      placeholder: string;
+      value: string;
+      validator?: Record<"passwordDoNotMatch", string>;
+    };
+  };
+  buttons?: {
+    submit: string;
   };
   onSignIn$?: QRL<(user: UserModel) => void>;
   onError$?: QRL<(error: FirebaseError) => void>;
 }
 
 export const SignUpForm = component$<Props>(
-  ({ fields, onSignIn$, onError$ }) => {
+  ({ title, fields, buttons, onSignIn$, onError$ }) => {
     const firebaseConfig = useContext(FirebaseConfigContext);
     const userSigned = useSignal<UserModel>();
-    const name = useSignal<string>(fields.name.value);
-    const email = useSignal<string>(fields.email.value);
-    const password = useSignal<string>(fields.password.value);
+    const name = useSignal<string>(fields?.name.value || "");
+    const email = useSignal<string>(fields?.email.value || "");
+    const password = useSignal<string>(fields?.password.value || "");
+    const passwordConfirm = useSignal<string>(
+      fields?.passwordConfirm.value || ""
+    );
 
     return (
       <form
@@ -47,6 +62,10 @@ export const SignUpForm = component$<Props>(
           e.stopPropagation();
 
           try {
+            if (password.value !== passwordConfirm.value) {
+              throw new Error("Passwords do not match");
+            }
+
             const user = await new AuthService(
               JSON.parse(CRYPTER.decrypt(firebaseConfig))
             ).signUpWithEmailAndPassword(email.value, password.value, {
@@ -82,41 +101,71 @@ export const SignUpForm = component$<Props>(
           }
         }}
       >
-        <div class="fieldset">
-          <label for="sign_up_name">{fields.name.label || "Name"}</label>
+        <label for="sign_up_name" class="fieldset">
+          {fields?.name.label || "Name"}
           <input
             type="text"
             id="sign_up_name"
             name="name"
-            placeholder={fields.name.placeholder || "Name"}
+            placeholder={fields?.name.placeholder || "Name"}
             bind:value={name}
           />
-        </div>
-        <div class="fieldset">
-          <label for="sign_up_email">{fields.email.label || "Email"}</label>
+        </label>
+        <Slot name="under-name" />
+        <label for="sign_up_email" class="fieldset">
+          {fields?.email.label || "Email"}
           <input
             type="email"
             id="sign_up_email"
             name="email"
             autocapitalize="none"
-            placeholder={fields.email.placeholder || "Email"}
+            placeholder={fields?.email.placeholder || "Email"}
             bind:value={email}
           />
-        </div>
-        <div class="fieldset">
-          <label for="sign_up_password">
-            {fields.password.label || "Password"}
+        </label>
+        <Slot name="under-email" />
+        <fieldset>
+          <legend>{title?.password || "Valid Password"}</legend>
+          <label for="sign_up_password" class="fieldset">
+            {fields?.password.label || "Password"}
+            <input
+              type="password"
+              id="sign_up_password"
+              name="password"
+              placeholder={fields?.password.placeholder || "Password"}
+              bind:value={password}
+            />
           </label>
-          <input
-            type="password"
-            id="sign_up_password"
-            name="password"
-            placeholder={fields.password.placeholder || "Password"}
-            bind:value={password}
-          />
-        </div>
+          <Slot name="under-password" />
+          <label for="sign_up_password" class="fieldset">
+            {fields?.passwordConfirm.label || "Confirm Password"}
+            <input
+              type="password"
+              id="sign_up_password_confirm"
+              name="password_confirm"
+              placeholder={
+                fields?.passwordConfirm.placeholder || "Confirm Password"
+              }
+              bind:value={passwordConfirm}
+              onChange$={(e) => {
+                const elem = e.target as HTMLInputElement;
+                if (fields?.passwordConfirm.validator) {
+                  if (elem.value !== password.value) {
+                    elem.setCustomValidity(
+                      fields?.passwordConfirm.validator.passwordDoNotMatch ||
+                        "Password do not match"
+                    );
+                  } else {
+                    elem.setCustomValidity("");
+                  }
+                }
+              }}
+            />
+          </label>
+        </fieldset>
+        <Slot name="under-password-confirm" />
         <button type="submit" class="submit">
-          Sign Up
+          {buttons?.submit || "Sign Up"}
         </button>
       </form>
     );

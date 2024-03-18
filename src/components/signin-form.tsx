@@ -1,6 +1,6 @@
 import { FirebaseError } from "firebase/app";
 
-import { QRL, component$, useContext, useSignal } from "@builder.io/qwik";
+import { QRL, Slot, component$, useContext, useSignal } from "@builder.io/qwik";
 import { FirebaseConfigContext } from "./auth";
 import { UserModel } from "../models/user.model";
 
@@ -10,7 +10,7 @@ import { AuthService } from "../services/auth.service";
 import "./signin-form.css";
 
 interface Props {
-  fields: {
+  fields?: {
     email: {
       label: string;
       placeholder: string;
@@ -22,16 +22,19 @@ interface Props {
       value: string;
     };
   };
+  buttons?: {
+    submit: string;
+  };
   onSignIn$?: QRL<(user: UserModel) => void>;
   onError$?: QRL<(error: FirebaseError) => void>;
 }
 
 export const SigninForm = component$<Props>(
-  ({ fields, onSignIn$, onError$ }) => {
+  ({ fields, buttons, onSignIn$, onError$ }) => {
     const firebaseConfig = useContext(FirebaseConfigContext);
     const userSigned = useSignal<UserModel>();
-    const email = useSignal<string>(fields.email.value);
-    const password = useSignal<string>(fields.password.value);
+    const email = useSignal<string>(fields?.email.value || "");
+    const password = useSignal<string>(fields?.password.value || "");
 
     return (
       <form
@@ -74,31 +77,31 @@ export const SigninForm = component$<Props>(
           }
         }}
       >
-        <div class="fieldset">
-          <label for="signin_email">{fields.email.label || "Email"}</label>
+        <label for="signin_email" class="fieldset">
+          {fields?.email.label || "Email"}
           <input
             type="email"
             id="signin_email"
             name="email"
             autocapitalize="none"
-            placeholder={fields.email.placeholder || "Email"}
+            placeholder={fields?.email.placeholder || "Email"}
             bind:value={email}
           />
-        </div>
-        <div class="fieldset">
-          <label for="signin_password">
-            {fields.password.label || "Password"}
-          </label>
+        </label>
+        <Slot name="under-email" />
+        <label for="signin_password" class="fieldset">
+          {fields?.password.label || "Password"}
           <input
             type="password"
             id="signin_password"
             name="password"
-            placeholder={fields.password.placeholder || "Password"}
+            placeholder={fields?.password.placeholder || "Password"}
             bind:value={password}
           />
-        </div>
+        </label>
+        <Slot name="under-password" />
         <button type="submit" class="submit">
-          Signin
+          {buttons?.submit || "Signin"}
         </button>
       </form>
     );
