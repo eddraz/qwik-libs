@@ -9,6 +9,7 @@ import {
   signOut,
   createUserWithEmailAndPassword,
   updateProfile,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 
 import { FirebaseService } from "./firebase.service";
@@ -49,6 +50,30 @@ export class AuthService {
   ): Promise<User | FirebaseError> {
     try {
       const credentials = await signInWithPopup(this.auth, provider);
+      return credentials.user;
+    } catch (error) {
+      return error as unknown as FirebaseError;
+    }
+  }
+
+  async signinWithEmailAndPassword(
+    email: string,
+    password: string
+  ): Promise<User | FirebaseError> {
+    try {
+      if (!email || !password) {
+        throw new Error("Email and password are required");
+      }
+      if (password.length < 6) {
+        throw new Error("Password must be at least 6 characters long");
+      }
+
+      const credentials = await signInWithEmailAndPassword(
+        this.auth,
+        email,
+        password
+      );
+
       return credentials.user;
     } catch (error) {
       return error as unknown as FirebaseError;
