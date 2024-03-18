@@ -1,6 +1,6 @@
 .btn {
   display: flex;
-  gap: 3px;
+  gap: 8px;
   justify-content: space-between;
   align-items: center;
   background-color: #505050;
