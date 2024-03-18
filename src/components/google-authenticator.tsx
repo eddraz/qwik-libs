@@ -31,24 +31,24 @@ export const GoogleAuthenticator = component$<Props>(
     const profileButtonList = useSignal<boolean>();
 
     // eslint-disable-next-line qwik/no-use-visible-task
-    useVisibleTask$(async () => {
-      const currentUser = await new AuthService(
-        JSON.parse(CRYPTER.decrypt(firebaseConfig))
-      ).currentUser();
+    useVisibleTask$(() => {
+      new AuthService(JSON.parse(CRYPTER.decrypt(firebaseConfig))).currentUser(
+        (currentUser) => {
+          if (!currentUser || currentUser instanceof FirebaseError)
+            return console.error("Error getting current user");
 
-      if (!currentUser || currentUser instanceof FirebaseError)
-        return console.error("Error getting current user");
-
-      userSigned.value = {
-        disabled: false,
-        email: currentUser?.email,
-        displayName: currentUser?.displayName,
-        photoURL: currentUser?.photoURL,
-        uid: currentUser?.uid,
-        emailVerified: currentUser?.emailVerified,
-        phoneNumber: currentUser?.phoneNumber,
-        provider: currentUser?.providerId as UserModel["provider"],
-      };
+          userSigned.value = {
+            disabled: false,
+            email: currentUser?.email,
+            displayName: currentUser?.displayName,
+            photoURL: currentUser?.photoURL,
+            uid: currentUser?.uid,
+            emailVerified: currentUser?.emailVerified,
+            phoneNumber: currentUser?.phoneNumber,
+            provider: currentUser?.providerId as UserModel["provider"],
+          };
+        }
+      );
     });
 
     return (
