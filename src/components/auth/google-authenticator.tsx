@@ -104,7 +104,6 @@ export const GoogleAuthenticator = component$<Props>(
             class="btn btn-signin-google"
             onClick$={async () => {
               try {
-                console.log(CRYPTER.decrypt(firebaseConfig));
                 const user = await new AuthService(
                   JSON.parse(CRYPTER.decrypt(firebaseConfig))
                 ).signInWithPopup(new GoogleAuthProvider());
