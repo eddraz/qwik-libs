@@ -10,13 +10,11 @@ import {
   useVisibleTask$,
 } from "@builder.io/qwik";
 import { FirebaseConfigContext } from "./auth";
-import { ChevronDownIcon } from "../icons/chevron-down";
 import { UserModel } from "../../models/user.model";
+import { ChevronDownIcon } from "../icons/chevron-down";
 
 import { CRYPTER } from "../../utils/crypter.util";
 import { AuthService } from "../../services/auth.service";
-
-import "./google-authenticator.css";
 
 interface Props {
   onSignIn$?: QRL<(user: UserModel) => void>;

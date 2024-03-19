@@ -6,8 +6,6 @@ import { FirebaseConfigContext } from "./auth";
 import { CRYPTER } from "../../utils/crypter.util";
 import { AuthService } from "../../services/auth.service";
 
-import "./forgot-password-form.css";
-
 interface Props {
   fields?: {
     email: {

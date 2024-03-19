@@ -7,8 +7,6 @@ import { UserModel } from "../../models/user.model";
 import { CRYPTER } from "../../utils/crypter.util";
 import { AuthService } from "../../services/auth.service";
 
-import "./sign-up-form.css";
-
 interface Props {
   title?: {
     password: string;
