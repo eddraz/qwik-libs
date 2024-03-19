@@ -39,7 +39,7 @@ export const ForgotPasswordForm = component$<Props>(
             ).sendPasswordResetEmail(email.value);
 
             if (user instanceof FirebaseError) {
-              console.error("Error signing in with Google", user);
+              console.error("Error forgot password", user);
               return;
             }
 

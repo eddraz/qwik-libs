@@ -30,7 +30,6 @@ export const GoogleAuthenticator = component$<Props>(
 
     // eslint-disable-next-line qwik/no-use-visible-task
     useVisibleTask$(() => {
-      console.log("GoogleAuthenticator visible", firebaseConfig);
       new AuthService(JSON.parse(CRYPTER.decrypt(firebaseConfig))).currentUser(
         (currentUser) => {
           if (!currentUser || currentUser instanceof FirebaseError)
@@ -105,6 +104,7 @@ export const GoogleAuthenticator = component$<Props>(
             class="btn btn-signin-google"
             onClick$={async () => {
               try {
+                console.log(CRYPTER.decrypt(firebaseConfig));
                 const user = await new AuthService(
                   JSON.parse(CRYPTER.decrypt(firebaseConfig))
                 ).signInWithPopup(new GoogleAuthProvider());

@@ -71,7 +71,7 @@ export const SignUpForm = component$<Props>(
             });
 
             if (user instanceof FirebaseError) {
-              console.error("Error signing in with Google", user);
+              console.error("Error sign up", user);
               return;
             }
 
