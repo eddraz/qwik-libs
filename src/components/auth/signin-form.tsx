@@ -47,7 +47,7 @@ export const SigninForm = component$<Props>(
             ).signinWithEmailAndPassword(email.value, password.value);
 
             if (user instanceof FirebaseError) {
-              console.error("Error signing in with Google", user);
+              console.error("Error signing", user);
               return;
             }
 
