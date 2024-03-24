@@ -8,9 +8,6 @@ import { CRYPTER } from "../../utils/crypter.util";
 import { AuthService } from "../../services/auth.service";
 
 interface Props {
-  title?: {
-    password: string;
-  };
   fields?: {
     name: {
       label: string;
@@ -23,6 +20,7 @@ interface Props {
       value: string;
     };
     password: {
+      title?: string;
       label: string;
       placeholder: string;
       value: string;
@@ -42,7 +40,7 @@ interface Props {
 }
 
 export const SignUpForm = component$<Props>(
-  ({ title, fields, buttons, onSignIn$, onError$ }) => {
+  ({ fields, buttons, onSignIn$, onError$ }) => {
     const firebaseConfig = useContext(FirebaseConfigContext);
     const userSigned = useSignal<UserModel>();
     const name = useSignal<string>(fields?.name.value || "");
@@ -123,7 +121,7 @@ export const SignUpForm = component$<Props>(
         </label>
         <Slot name="under-email" />
         <fieldset class="fields-group">
-          <legend>{title?.password || "Set Password"}</legend>
+          <legend>{fields?.password?.title || "Set Password"}</legend>
           <label for="sign_up_password" class="fieldset">
             {fields?.password.label || "Password"}
             <input
