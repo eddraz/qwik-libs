@@ -1,0 +1,208 @@
+/**
+ * Tailwind CSS imports
+ * View the full documentation at https://tailwindcss.com
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --max-width-desktop: 1200px;
+  --max-width-tablet: 800px;
+  --max-width-mobile: 350px;
+  --primary-color: #e63600;
+  --secondary-color: #4d4d4d;
+}
+
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.auth-container {
+  padding: 10px;
+  height: 100%;
+  width: 100%;
+  background-color: white;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  max-width: 500px;
+
+  fieldset {
+    flex: 1 1 0%;
+    width: 100%;
+    max-width: fit-content;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+    border: 2px solid black;
+    padding: 20px;
+  }
+
+  label {
+    width: 100%;
+    max-width: fit-content;
+    flex: 1 1 0%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    input {
+      border-radius: 8px;
+      border: 2px solid black;
+      padding: 10px;
+      width: 100%;
+      max-width: fit-content;
+    }
+  }
+
+  .submit {
+    margin-top: 10px;
+    font-size: 1.2em;
+    cursor: pointer;
+    border-radius: 8px;
+    border: 2px solid black;
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    font-weight: bold;
+
+    &:hover {
+      background-color: white;
+      color: black;
+    }
+  }
+}
+
+.btn {
+  border: 2px solid transparent;
+  background-color: transparent;
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  gap: 5px;
+
+  & > span {
+    @apply flex flex-col items-start justify-between;
+
+    & > strong {
+      @apply text-base font-semibold;
+    }
+    & > small {
+      @apply text-xs font-normal;
+    }
+  }
+  img {
+    @apply ml-1 rounded-full;
+  }
+  &.light {
+    &:hover {
+      border-color: black;
+      background-color: white;
+      color: black;
+    }
+  }
+  &.dark {
+    color: white;
+    background-color: black;
+
+    &:hover {
+      border-color: white;
+      background-color: white;
+      color: black;
+    }
+  }
+  &:hover {
+    border-color: black;
+    background-color: white;
+    color: black;
+  }
+}
+.btn-primary {
+  border: 2px solid var(--primary-color);
+  background-color: var(--primary-color);
+  color: white;
+
+  &:hover {
+    background-color: white;
+    color: var(--primary-color);
+  }
+}
+.btn-secondary {
+  border: 2px solid var(--secondary-color);
+  background-color: var(--secondary-color);
+  color: white;
+
+  &:hover {
+    background-color: white;
+    color: var(--secondary-color);
+  }
+
+  &.light {
+    border: 2px solid var(--secondary-color);
+    background-color: white;
+    color: var(--secondary-color);
+
+    &:hover {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+  }
+}
+.link {
+  color: var(--primary-color);
+  text-decoration: underline;
+
+  &:hover {
+    color: rgba(0, 0, 0, 0.8);
+  }
+}
+
+.btn-list {
+  @apply m-0 inline-flex flex-col overflow-x-hidden rounded-md;
+
+  .btn {
+    @apply m-0 rounded-none px-2 hover:border-transparent;
+  }
+}
+.btn-signin-google {
+  @apply bg-red-600 text-white hover:border-red-600 hover:bg-white hover:text-red-600;
+}
+.btn-profile-signed {
+  @apply bg-gray-300 text-black;
+}
+.btn-sign-out {
+  @apply w-full cursor-pointer border-none bg-red-600 p-1 text-center text-lg font-bold text-white;
+
+  &:hover {
+    @apply bg-red-700;
+  }
+}
