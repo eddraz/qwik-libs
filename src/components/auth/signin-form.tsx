@@ -1,11 +1,23 @@
 import { FirebaseError } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
-import { QRL, Slot, component$, useContext, useSignal } from "@builder.io/qwik";
-import { FirebaseConfigContext } from "./auth";
+import {
+  QRL,
+  Slot,
+  component$,
+  noSerialize,
+  useContext,
+  useSignal,
+} from "@builder.io/qwik";
+import {
+  FirebaseContext,
+  UserContext,
+  UserDisplayNameContext,
+  UserPhotoUrlContext,
+} from "./auth";
 import { UserModel } from "../../models/user.model";
 
-import { CRYPTER } from "../../utils/crypter.util";
-import { AuthService } from "../../services/auth.service";
+import { FirebaseService } from "../../services/firebase.service";
 
 interface Props {
   fields?: {
@@ -29,8 +41,12 @@ interface Props {
 
 export const SigninForm = component$<Props>(
   ({ fields, buttons, onSignIn$, onError$ }) => {
-    const firebaseConfig = useContext(FirebaseConfigContext);
-    const userSigned = useSignal<UserModel>();
+    const _firebaseConfig = useContext(FirebaseContext);
+    const _user = useContext(UserContext);
+    const _displayName = useContext(UserDisplayNameContext);
+    const _photoURL = useContext(UserPhotoUrlContext);
+    // const firebaseConfig = useContext(FirebaseConfigContext);
+    // const userSigned = useSignal<UserModel>();
     const email = useSignal<string>(fields?.email.value || "");
     const password = useSignal<string>(fields?.password.value || "");
 
@@ -42,27 +58,31 @@ export const SigninForm = component$<Props>(
           e.stopPropagation();
 
           try {
-            const user = await new AuthService(
-              JSON.parse(CRYPTER.decrypt(firebaseConfig))
-            ).signinWithEmailAndPassword(email.value, password.value);
+            const firebase = noSerialize(new FirebaseService(_firebaseConfig));
+            const auth = getAuth(firebase?.app);
+
+            const credential = await signInWithEmailAndPassword(
+              auth,
+              email.value,
+              password.value,
+            );
+            const user = credential.user;
 
             if (user instanceof FirebaseError) {
-              console.error("Error signing", user);
+              console.error("Error signing in with Google", user);
               return;
             }
 
-            userSigned.value = {
-              disabled: false,
-              email: user?.email,
-              displayName: user?.displayName,
-              photoURL: user?.photoURL,
-              uid: user?.uid,
-              emailVerified: user?.emailVerified,
-              phoneNumber: user?.phoneNumber,
-              provider: user?.providerId as UserModel["provider"],
-            };
+            _user.disabled = false;
+            _user.email = user?.email;
+            _user.emailVerified = user.emailVerified;
+            _user.phoneNumber = user.phoneNumber;
+            _user.uid = user.uid;
+            _user.provider = user.providerId as UserModel["provider"];
+            _user.displayName = user.displayName || _displayName;
+            _user.photoURL = user.photoURL || _photoURL;
 
-            onSignIn$ && onSignIn$(userSigned.value);
+            onSignIn$?.(_user);
           } catch (error: any) {
             onError$ &&
               onError$({
@@ -75,7 +95,7 @@ export const SigninForm = component$<Props>(
           }
         }}
       >
-        <label for="signin_email" class="fieldset">
+        <label for="signin_email">
           {fields?.email.label || "Email"}
           <input
             type="email"
@@ -87,7 +107,7 @@ export const SigninForm = component$<Props>(
           />
         </label>
         <Slot name="under-email" />
-        <label for="signin_password" class="fieldset">
+        <label for="signin_password">
           {fields?.password.label || "Password"}
           <input
             type="password"
@@ -103,5 +123,5 @@ export const SigninForm = component$<Props>(
         </button>
       </form>
     );
-  }
+  },
 );

@@ -1,11 +1,23 @@
 import { FirebaseError } from "firebase/app";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 
-import { QRL, Slot, component$, useContext, useSignal } from "@builder.io/qwik";
-import { FirebaseConfigContext } from "./auth";
+import {
+  QRL,
+  Slot,
+  component$,
+  noSerialize,
+  useContext,
+  useSignal,
+} from "@builder.io/qwik";
+import {
+  FirebaseContext,
+  UserContext,
+  UserDisplayNameContext,
+  UserPhotoUrlContext,
+} from "./auth";
 import { UserModel } from "../../models/user.model";
 
-import { CRYPTER } from "../../utils/crypter.util";
-import { AuthService } from "../../services/auth.service";
+import { FirebaseService } from "../../services/firebase.service";
 
 interface Props {
   fields?: {
@@ -41,13 +53,15 @@ interface Props {
 
 export const SignUpForm = component$<Props>(
   ({ fields, buttons, onSignIn$, onError$ }) => {
-    const firebaseConfig = useContext(FirebaseConfigContext);
-    const userSigned = useSignal<UserModel>();
+    const _firebaseConfig = useContext(FirebaseContext);
+    const _user = useContext(UserContext);
+    const _displayName = useContext(UserDisplayNameContext);
+    const _photoURL = useContext(UserPhotoUrlContext);
     const name = useSignal<string>(fields?.name.value || "");
     const email = useSignal<string>(fields?.email.value || "");
     const password = useSignal<string>(fields?.password.value || "");
     const passwordConfirm = useSignal<string>(
-      fields?.passwordConfirm.value || ""
+      fields?.passwordConfirm.value || "",
     );
 
     return (
@@ -62,29 +76,31 @@ export const SignUpForm = component$<Props>(
               throw new Error("Passwords do not match");
             }
 
-            const user = await new AuthService(
-              JSON.parse(CRYPTER.decrypt(firebaseConfig))
-            ).signUpWithEmailAndPassword(email.value, password.value, {
-              displayName: name.value,
-            });
+            const firebase = noSerialize(new FirebaseService(_firebaseConfig));
+            const auth = getAuth(firebase?.app);
+
+            const credential = await createUserWithEmailAndPassword(
+              auth,
+              email.value,
+              password.value,
+            );
+            const user = credential.user;
 
             if (user instanceof FirebaseError) {
-              console.error("Error sign up", user);
+              console.error("Error signing in with Google", user);
               return;
             }
 
-            userSigned.value = {
-              disabled: false,
-              email: user?.email,
-              displayName: user?.displayName,
-              photoURL: user?.photoURL,
-              uid: user?.uid,
-              emailVerified: user?.emailVerified,
-              phoneNumber: user?.phoneNumber,
-              provider: user?.providerId as UserModel["provider"],
-            };
+            _user.disabled = false;
+            _user.email = user?.email;
+            _user.emailVerified = user.emailVerified;
+            _user.phoneNumber = user.phoneNumber;
+            _user.uid = user.uid;
+            _user.provider = user.providerId as UserModel["provider"];
+            _user.displayName = name.value || user.displayName || _displayName;
+            _user.photoURL = user.photoURL || _photoURL;
 
-            onSignIn$ && onSignIn$(userSigned.value);
+            onSignIn$?.(_user);
           } catch (error: any) {
             onError$ &&
               onError$({
@@ -97,7 +113,7 @@ export const SignUpForm = component$<Props>(
           }
         }}
       >
-        <label for="sign_up_name" class="fieldset">
+        <label for="sign_up_name">
           {fields?.name.label || "Name"}
           <input
             type="text"
@@ -108,7 +124,7 @@ export const SignUpForm = component$<Props>(
           />
         </label>
         <Slot name="under-name" />
-        <label for="sign_up_email" class="fieldset">
+        <label for="sign_up_email">
           {fields?.email.label || "Email"}
           <input
             type="email"
@@ -122,7 +138,7 @@ export const SignUpForm = component$<Props>(
         <Slot name="under-email" />
         <fieldset class="fields-group">
           <legend>{fields?.password?.title || "Set Password"}</legend>
-          <label for="sign_up_password" class="fieldset">
+          <label for="sign_up_password">
             {fields?.password.label || "Password"}
             <input
               type="password"
@@ -133,7 +149,7 @@ export const SignUpForm = component$<Props>(
             />
           </label>
           <Slot name="under-password" />
-          <label for="sign_up_password" class="fieldset">
+          <label for="sign_up_password">
             {fields?.passwordConfirm.label || "Confirm Password"}
             <input
               type="password"
@@ -149,7 +165,7 @@ export const SignUpForm = component$<Props>(
                   if (elem.value !== password.value) {
                     elem.setCustomValidity(
                       fields?.passwordConfirm.validator.passwordDoNotMatch ||
-                        "Password do not match"
+                        "Password do not match",
                     );
                   } else {
                     elem.setCustomValidity("");
@@ -165,5 +181,5 @@ export const SignUpForm = component$<Props>(
         </button>
       </form>
     );
-  }
+  },
 );

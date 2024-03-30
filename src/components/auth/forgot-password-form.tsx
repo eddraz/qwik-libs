@@ -1,10 +1,17 @@
 import { FirebaseError } from "firebase/app";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
-import { QRL, Slot, component$, useContext, useSignal } from "@builder.io/qwik";
-import { FirebaseConfigContext } from "./auth";
+import {
+  QRL,
+  Slot,
+  component$,
+  noSerialize,
+  useContext,
+  useSignal,
+} from "@builder.io/qwik";
+import { FirebaseContext } from "./auth";
 
-import { CRYPTER } from "../../utils/crypter.util";
-import { AuthService } from "../../services/auth.service";
+import { FirebaseService } from "../../services/firebase.service";
 
 interface Props {
   fields?: {
@@ -23,7 +30,7 @@ interface Props {
 
 export const ForgotPasswordForm = component$<Props>(
   ({ fields, buttons, onSended$, onError$ }) => {
-    const firebaseConfig = useContext(FirebaseConfigContext);
+    const _firebaseConfig = useContext(FirebaseContext);
     const email = useSignal<string>(fields?.email.value || "");
 
     return (
@@ -34,16 +41,11 @@ export const ForgotPasswordForm = component$<Props>(
           e.stopPropagation();
 
           try {
-            const user = await new AuthService(
-              JSON.parse(CRYPTER.decrypt(firebaseConfig))
-            ).sendPasswordResetEmail(email.value);
+            const firebase = noSerialize(new FirebaseService(_firebaseConfig));
+            const auth = getAuth(firebase?.app);
+            await sendPasswordResetEmail(auth, email.value);
 
-            if (user instanceof FirebaseError) {
-              console.error("Error forgot password", user);
-              return;
-            }
-
-            onSended$ && onSended$();
+            onSended$?.();
           } catch (error: any) {
             onError$ &&
               onError$({
@@ -56,7 +58,7 @@ export const ForgotPasswordForm = component$<Props>(
           }
         }}
       >
-        <label for="forgot_password_email" class="fieldset">
+        <label for="forgot_password_email">
           {fields?.email.label || "Email"}
           <input
             type="email"
@@ -73,5 +75,5 @@ export const ForgotPasswordForm = component$<Props>(
         </button>
       </form>
     );
-  }
+  },
 );
