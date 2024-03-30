@@ -1,88 +1,37 @@
-import { FirebaseApp, FirebaseError } from "firebase/app";
+import { FirebaseError } from "firebase/app";
 import {
   Auth,
-  GoogleAuthProvider,
   User,
-  getAuth,
-  onAuthStateChanged,
-  signInWithPopup,
   signOut,
-  createUserWithEmailAndPassword,
-  updateProfile,
-  signInWithEmailAndPassword,
-  sendPasswordResetEmail,
+  ConfirmationResult,
+  UserCredential,
 } from "firebase/auth";
 
-import { FirebaseService } from "./firebase.service";
-import { FirebaseConfigModel } from "../models/firebase-config.model";
-
 export class AuthService {
-  initApp: FirebaseApp;
-  auth: Auth;
+  readonly auth: Auth | undefined;
+  private userData: User | undefined = undefined;
+  readonly user = this.userData;
+  private confirmationRecaptchaResult: ConfirmationResult | undefined =
+    undefined;
 
-  constructor(firebaseConfig: FirebaseConfigModel) {
-    const app = new FirebaseService(firebaseConfig).app;
-
-    if (!app) {
-      throw new Error("Firebase app not initialized");
-    }
-
-    this.initApp = app;
-    this.auth = getAuth(app);
-  }
-
-  currentUser(callback: (data: User | FirebaseError | null) => void) {
-    if (this.auth.currentUser) callback(this.auth.currentUser);
-    else {
-      onAuthStateChanged(
-        this.auth,
-        (user) => {
-          callback(user);
-        },
-        (error) => {
-          callback(error as FirebaseError);
-        }
-      );
-    }
+  constructor(auth: Auth) {
+    this.auth = auth;
   }
 
   async signInWithPopup(
-    provider: GoogleAuthProvider
-  ): Promise<User | FirebaseError> {
+    credentials: UserCredential,
+  ): Promise<User | undefined | FirebaseError> {
     try {
-      const credentials = await signInWithPopup(this.auth, provider);
       return credentials.user;
     } catch (error) {
       return error as unknown as FirebaseError;
     }
   }
 
-  async sendPasswordResetEmail(email: string): Promise<void | FirebaseError> {
-    try {
-      return await sendPasswordResetEmail(this.auth, email);
-    } catch (error) {
-      return error as unknown as FirebaseError;
-    }
-  }
-
   async signinWithEmailAndPassword(
-    email: string,
-    password: string
-  ): Promise<User | FirebaseError> {
+    credentials: UserCredential,
+  ): Promise<User | undefined | FirebaseError> {
     try {
-      if (!email || !password) {
-        throw new Error("Email and password are required");
-      }
-      if (password.length < 6) {
-        throw new Error("Password must be at least 6 characters long");
-      }
-
-      const credentials = await signInWithEmailAndPassword(
-        this.auth,
-        email,
-        password
-      );
-
       return credentials.user;
     } catch (error) {
       return error as unknown as FirebaseError;
@@ -90,39 +39,37 @@ export class AuthService {
   }
 
   async signUpWithEmailAndPassword(
-    email: string,
-    password: string,
-    moreInfo?: { displayName?: string }
-  ): Promise<User | FirebaseError> {
+    credentials: UserCredential,
+  ): Promise<User | undefined | FirebaseError> {
     try {
-      if (!email || !password) {
-        throw new Error("Email and password are required");
-      }
-      if (password.length < 6) {
-        throw new Error("Password must be at least 6 characters long");
-      }
-
-      const credentials = await createUserWithEmailAndPassword(
-        this.auth,
-        email,
-        password
-      );
-
-      if (moreInfo?.displayName) {
-        await updateProfile(credentials.user, {
-          displayName: moreInfo.displayName,
-        });
-      }
-
       return credentials.user;
     } catch (error) {
       return error as unknown as FirebaseError;
     }
   }
 
-  async signOut(): Promise<void | FirebaseError> {
+  async signOut(auth: Auth): Promise<void | FirebaseError> {
     try {
-      return await signOut(this.auth);
+      return await signOut(auth);
+    } catch (error) {
+      return error as unknown as FirebaseError;
+    }
+  }
+
+  async confirmCode(
+    code: string,
+    confirmationResult: ConfirmationResult,
+  ): Promise<User | undefined | FirebaseError> {
+    console.log(confirmationResult, "confirmationResult", code, "code");
+    try {
+      if (!code) {
+        throw new Error("Code is required");
+      }
+
+      const credentials = await confirmationResult.confirm(code);
+      console.log(credentials, "User signed in successfully");
+
+      return credentials.user;
     } catch (error) {
       return error as unknown as FirebaseError;
     }
