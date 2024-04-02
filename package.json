@@ -65,12 +65,12 @@
     "firebase": "^10.9.0",
     "postcss": "^8.4.31",
     "prettier-plugin-tailwindcss": "^0.5.4",
-    "qwik-lib-tabler-icons": "^0.0.7",
+    "qwik-lib-tabler-icons": "^0.0.11",
     "tailwindcss": "3.3.3",
     "robohash-avatars": "^1.0.1",
     "unique-names-generator": "^4.7.1"
   },
   "dependencies": {
-    "qwik-lib-tabler-icons": "^0.0.7"
+    "qwik-lib-tabler-icons": "^0.0.11"
   }
 }
