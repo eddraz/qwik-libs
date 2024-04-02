@@ -1,3 +1,5 @@
+import { TablerIcon } from "qwik-lib-tabler-icons";
+
 import { Auth } from "./components/auth/auth";
 import { ForgotPasswordForm } from "./components/auth/forgot-password-form";
 import { GoogleAuthenticator } from "./components/auth/google-authenticator";
@@ -5,7 +7,7 @@ import { SignUpForm } from "./components/auth/sign-up-form";
 import { SigninForm } from "./components/auth/signin-form";
 import { SigninPhone } from "./components/auth/signin-phone";
 import { UserProfile } from "./components/auth/user-profile";
-import { BrandGoogleFilledIcon } from "./components/icons/brand-google-filled";
+import { Pay } from "./components/pay/pay";
 import { component$, useSignal } from "@builder.io/qwik";
 import { UserModel } from "./models/user.model";
 
@@ -21,6 +23,12 @@ export const firebaseConfig = CRYPTER.encrypt({
   messagingSenderId: import.meta.env.PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.PUBLIC_FIREBASE_APP_ID,
   measurementId: import.meta.env.PUBLIC_FIREBASE_MEASUREMENT_ID,
+});
+export const epaycoConfig = CRYPTER.encrypt({
+  key: "45b960805ced5c27ce34b1600b4b9f54",
+  test: true,
+  external: "true",
+  methodsDisable: [],
 });
 
 export default component$(() => {
@@ -58,7 +66,7 @@ export default component$(() => {
             }}
           >
             Signin with Google
-            <BrandGoogleFilledIcon color="#fffffff" height="24" width="24" />
+            <TablerIcon name="brand-google" color="#ffffff" size={24} />
           </GoogleAuthenticator>
         </Auth>
         <Auth
@@ -134,6 +142,37 @@ export default component$(() => {
           </h1>
           <SigninPhone />
         </Auth>
+
+        <main class="p-5">
+          <h1 class="my-10 border-b-2 border-b-zinc-400 py-8 text-5xl">
+            Pagos en linea
+          </h1>
+          <Pay
+            class="btn btn-primary"
+            config={epaycoConfig}
+            product={{
+              name: "Vestido Mujer Primavera",
+              description: "Vestido Mujer Primavera",
+              invoice: "FAC-1234",
+              currency: "cop",
+              amount: "5000",
+              tax_base: "4000",
+              tax: "500",
+              tax_ico: "500",
+              country: "co",
+              lang: "en",
+            }}
+            customer={{
+              name_billing: "Jhon Doe",
+              address_billing: "Carrera 19 numero 14 91",
+              type_doc_billing: "cc",
+              mobilephone_billing: "3050000000",
+              number_doc_billing: "100000000",
+            }}
+          >
+            Pagar
+          </Pay>
+        </main>
       </body>
     </>
   );
