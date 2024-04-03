@@ -1,6 +1,7 @@
 import {
   CSSProperties,
   ClassList,
+  QRL,
   Signal,
   Slot,
   component$,
@@ -27,6 +28,7 @@ interface Props {
   product: EpaycoProductI;
   customer: EpaycoCustomerI;
   optional?: EpaycoOptionalI;
+  onClick$?: QRL<(event: PointerEvent, element: HTMLButtonElement) => void>;
 }
 
 export const Pay = component$<Props>((props) => {
@@ -43,6 +45,9 @@ export const Pay = component$<Props>((props) => {
         product={props.product}
         customer={props.customer}
         optional={props.optional}
+        onClick$={(event, elem) =>
+          props.onClick$ && props.onClick$(event, elem)
+        }
       >
         <Slot />
       </Epayco>
