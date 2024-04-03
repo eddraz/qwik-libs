@@ -36,10 +36,11 @@ interface Props {
   product: EpaycoProductI;
   customer: EpaycoCustomerI;
   optional?: EpaycoOptionalI;
+  onClick$?: QRL<(event: PointerEvent, element: HTMLButtonElement) => void>;
 }
 
 export const Epayco = component$<Props>(
-  ({ cssStyle, cssClass, product, customer, optional }) => {
+  ({ cssStyle, cssClass, product, customer, optional, onClick$ }) => {
     const config$ = useContext(EpaycoConfigContext);
 
     return (
@@ -47,7 +48,9 @@ export const Epayco = component$<Props>(
         <button
           style={cssStyle}
           class={cssClass}
-          onClick$={() => {
+          onClick$={(event, elem) => {
+            onClick$?.(event, elem);
+
             const handler = ePayco.checkout.configure(config$);
 
             handler.open({
