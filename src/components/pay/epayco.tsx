@@ -1,4 +1,5 @@
 import {
+  CSSProperties,
   ClassList,
   QRL,
   Signal,
@@ -30,6 +31,7 @@ interface Epayco {
 }
 
 interface Props {
+  cssStyle?: string | CSSProperties;
   cssClass?: ClassList | Signal<ClassList>;
   product: EpaycoProductI;
   customer: EpaycoCustomerI;
@@ -37,12 +39,13 @@ interface Props {
 }
 
 export const Epayco = component$<Props>(
-  ({ cssClass, product, customer, optional }) => {
+  ({ cssStyle, cssClass, product, customer, optional }) => {
     const config$ = useContext(EpaycoConfigContext);
 
     return (
       <>
         <button
+          style={cssStyle}
           class={cssClass}
           onClick$={() => {
             const handler = ePayco.checkout.configure(config$);

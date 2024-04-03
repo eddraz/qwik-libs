@@ -1,4 +1,5 @@
 import {
+  CSSProperties,
   ClassList,
   Signal,
   Slot,
@@ -20,6 +21,7 @@ export const EpaycoConfigContext =
   createContextId<EpaycoConfigI>("epayco-config");
 
 interface Props {
+  style?: string | CSSProperties;
   class?: ClassList | Signal<ClassList>;
   config: string;
   product: EpaycoProductI;
@@ -36,6 +38,7 @@ export const Pay = component$<Props>((props) => {
   return (
     <>
       <Epayco
+        cssStyle={props.style}
         cssClass={props.class}
         product={props.product}
         customer={props.customer}
