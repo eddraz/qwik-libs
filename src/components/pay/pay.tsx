@@ -24,6 +24,7 @@ export const EpaycoConfigContext =
 interface Props {
   style?: string | CSSProperties;
   class?: ClassList | Signal<ClassList>;
+  disabled?: boolean;
   config: string;
   product: EpaycoProductI;
   customer: EpaycoCustomerI;
@@ -42,6 +43,7 @@ export const Pay = component$<Props>((props) => {
       <Epayco
         cssStyle={props.style}
         cssClass={props.class}
+        disabled={props.disabled}
         product={props.product}
         customer={props.customer}
         optional={props.optional}

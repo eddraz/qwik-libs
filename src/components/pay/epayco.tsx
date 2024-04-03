@@ -33,6 +33,7 @@ interface Epayco {
 interface Props {
   cssStyle?: string | CSSProperties;
   cssClass?: ClassList | Signal<ClassList>;
+  disabled?: boolean;
   product: EpaycoProductI;
   customer: EpaycoCustomerI;
   optional?: EpaycoOptionalI;
@@ -40,12 +41,13 @@ interface Props {
 }
 
 export const Epayco = component$<Props>(
-  ({ cssStyle, cssClass, product, customer, optional, onClick$ }) => {
+  ({ cssStyle, cssClass, disabled, product, customer, optional, onClick$ }) => {
     const config$ = useContext(EpaycoConfigContext);
 
     return (
       <>
         <button
+          disabled={disabled}
           style={cssStyle}
           class={cssClass}
           onClick$={(event, elem) => {
