@@ -63,49 +63,55 @@ export const Auth = component$<Props>(({ firebaseConfig, onAuth$ }) => {
   useVisibleTask$(() => {
     if (firebaseConfig) {
       const firebase = noSerialize(new FirebaseService(_firebaseConfig));
-      const auth = getAuth(firebase?.app);
 
-      _user.displayName = _displayName;
-      _user.photoURL = _photoURL;
+      if (firebase?.app) {
+        const auth = getAuth(firebase.app);
 
-      if (auth.currentUser) {
-        _user.displayName = auth.currentUser.displayName || _displayName;
-        _user.photoURL = auth.currentUser.photoURL || _photoURL;
-        _user.uid = auth.currentUser.uid;
-        _user.disabled = false;
-        _user.email = auth.currentUser.email;
-        _user.emailVerified = auth.currentUser.emailVerified;
-        _user.phoneNumber = auth.currentUser.phoneNumber;
-        _user.provider = (auth.currentUser.providerId ||
-          "email") as UserModel["provider"];
+        _user.displayName = _displayName;
+        _user.photoURL = _photoURL;
 
-        onAuth$?.(_user);
+        if (auth.currentUser) {
+          _user.displayName = auth.currentUser.displayName || _displayName;
+          _user.photoURL = auth.currentUser.photoURL || _photoURL;
+          _user.uid = auth.currentUser.uid;
+          _user.disabled = false;
+          _user.email = auth.currentUser.email;
+          _user.emailVerified = auth.currentUser.emailVerified;
+          _user.phoneNumber = auth.currentUser.phoneNumber;
+          _user.provider = (auth.currentUser.providerId ||
+            "email") as UserModel["provider"];
+
+          onAuth$?.(_user);
+        }
+
+        onAuthStateChanged(
+          auth,
+          (credentialUser) => {
+            if (credentialUser) {
+              _user.displayName =
+                credentialUser.displayName || _user.displayName || _displayName;
+              _user.photoURL =
+                credentialUser.photoURL || _user.phoneNumber || _photoURL;
+              _user.uid = credentialUser.uid || _user.uid;
+              _user.disabled = _user.disabled || false;
+              _user.email = credentialUser.email || _user.email;
+              _user.emailVerified =
+                credentialUser.emailVerified || _user.emailVerified;
+              _user.phoneNumber =
+                credentialUser.phoneNumber || _user.phoneNumber;
+              _user.provider = (credentialUser.providerId ||
+                _user.provider) as UserModel["provider"];
+
+              onAuth$?.(_user);
+            }
+          },
+          (error: any) => {
+            console.error("Auth state changed error", error);
+          },
+        );
+      } else {
+        console.error("Firebase doesn't connect");
       }
-
-      onAuthStateChanged(
-        auth,
-        (credentialUser) => {
-          if (credentialUser) {
-            _user.displayName =
-              credentialUser.displayName || _user.displayName || _displayName;
-            _user.photoURL =
-              credentialUser.photoURL || _user.phoneNumber || _photoURL;
-            _user.uid = credentialUser.uid || _user.uid;
-            _user.disabled = _user.disabled || false;
-            _user.email = credentialUser.email || _user.email;
-            _user.emailVerified =
-              credentialUser.emailVerified || _user.emailVerified;
-            _user.phoneNumber = credentialUser.phoneNumber || _user.phoneNumber;
-            _user.provider = (credentialUser.providerId ||
-              _user.provider) as UserModel["provider"];
-
-            onAuth$?.(_user);
-          }
-        },
-        (error: any) => {
-          console.error("Auth state changed error", error);
-        },
-      );
     } else {
       console.error("Firebase config not found");
     }

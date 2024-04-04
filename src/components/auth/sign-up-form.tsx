@@ -77,30 +77,36 @@ export const SignUpForm = component$<Props>(
             }
 
             const firebase = noSerialize(new FirebaseService(_firebaseConfig));
-            const auth = getAuth(firebase?.app);
 
-            const credential = await createUserWithEmailAndPassword(
-              auth,
-              email.value,
-              password.value,
-            );
-            const user = credential.user;
+            if (firebase?.app) {
+              const auth = getAuth(firebase?.app);
 
-            if (user instanceof FirebaseError) {
-              console.error("Error signing in with Google", user);
-              return;
+              const credential = await createUserWithEmailAndPassword(
+                auth,
+                email.value,
+                password.value,
+              );
+              const user = credential.user;
+
+              if (user instanceof FirebaseError) {
+                console.error("Error signing in with Google", user);
+                return;
+              }
+
+              _user.disabled = false;
+              _user.email = user?.email;
+              _user.emailVerified = user.emailVerified;
+              _user.phoneNumber = user.phoneNumber;
+              _user.uid = user.uid;
+              _user.provider = user.providerId as UserModel["provider"];
+              _user.displayName =
+                name.value || user.displayName || _displayName;
+              _user.photoURL = user.photoURL || _photoURL;
+
+              onSignIn$?.(_user);
+            } else {
+              console.error("Firebase doesn't connect");
             }
-
-            _user.disabled = false;
-            _user.email = user?.email;
-            _user.emailVerified = user.emailVerified;
-            _user.phoneNumber = user.phoneNumber;
-            _user.uid = user.uid;
-            _user.provider = user.providerId as UserModel["provider"];
-            _user.displayName = name.value || user.displayName || _displayName;
-            _user.photoURL = user.photoURL || _photoURL;
-
-            onSignIn$?.(_user);
           } catch (error: any) {
             onError$ &&
               onError$({
