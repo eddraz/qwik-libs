@@ -49,7 +49,9 @@ export const Auth = component$<Props>(({ firebaseConfig, onAuth$ }) => {
   useContextProvider(UserDisplayNameContext, displayName);
   useContextProvider(
     UserPhotoUrlContext,
-    `https://robohash.org/${removeAccents(displayName).toLowerCase().replace(/ /g, "-")}`,
+    `https://robohash.org/${removeAccents(displayName)
+      .toLowerCase()
+      .replace(/ /g, "-")}`,
   );
 
   const _firebaseConfig = useContext(FirebaseContext);
