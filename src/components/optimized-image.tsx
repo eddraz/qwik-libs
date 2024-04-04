@@ -4,7 +4,7 @@ import {
   useImageProvider,
 } from "qwik-image";
 
-import { $, ClassList, Signal, component$, useTask$ } from "@builder.io/qwik";
+import { $, ClassList, component$, useTask$ } from "@builder.io/qwik";
 
 interface Props {
   layout?: "constrained" | "fixed" | "fullWidth";
@@ -22,7 +22,7 @@ interface Props {
   height?: number;
   alt?: string;
   placeholder?: string;
-  class?: ClassList | Signal<ClassList>;
+  class?: ClassList;
 }
 
 export const OptimizedImage = component$<Props>((props) => {
@@ -48,7 +48,7 @@ export const OptimizedImage = component$<Props>((props) => {
     <>
       {props.src && (
         <Image
-          class=""
+          class={props.class}
           layout={props.layout!}
           objectFit={props.objectFit}
           width={props.width}
