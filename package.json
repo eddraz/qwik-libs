@@ -1,6 +1,6 @@
 {
   "name": "qwik-libs",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "Create a reusable Qwik component library",
   "main": "./lib/index.qwik.mjs",
   "qwik": "./lib/index.qwik.mjs",
