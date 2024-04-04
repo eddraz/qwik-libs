@@ -1,5 +1,4 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import robohashAvatars from "robohash-avatars";
 import {
   adjectives,
   animals,
@@ -50,9 +49,7 @@ export const Auth = component$<Props>(({ firebaseConfig, onAuth$ }) => {
   useContextProvider(UserDisplayNameContext, displayName);
   useContextProvider(
     UserPhotoUrlContext,
-    robohashAvatars.generateAvatar({
-      username: removeAccents(displayName).toLowerCase().replace(/ /g, "-"),
-    }),
+    `https://robohash.org/${removeAccents(displayName).toLowerCase().replace(/ /g, "-")}`,
   );
 
   const _firebaseConfig = useContext(FirebaseContext);

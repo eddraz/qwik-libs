@@ -50,7 +50,6 @@
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.4",
     "qwik-image": "^0.0.8",
-    "robohash-avatars": "^1.0.1",
     "tailwindcss": "3.3.3",
     "typescript": "5.3.3",
     "undici": "*",
@@ -67,7 +66,6 @@
     "prettier-plugin-tailwindcss": "^0.5.4",
     "qwik-lib-tabler-icons": "^0.0.11",
     "tailwindcss": "3.3.3",
-    "robohash-avatars": "^1.0.1",
     "unique-names-generator": "^4.7.1"
   },
   "dependencies": {
