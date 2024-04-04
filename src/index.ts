@@ -1,3 +1,4 @@
+export { OptimizedImage } from "./components/optimized-image";
 export { Auth } from "./components/auth/auth";
 export { SignUpForm } from "./components/auth/sign-up-form";
 export { SigninForm } from "./components/auth/signin-form";
