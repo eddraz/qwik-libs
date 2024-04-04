@@ -149,7 +149,7 @@ export const SignUpForm = component$<Props>(
             />
           </label>
           <Slot name="under-password" />
-          <label for="sign_up_password">
+          <label for="sign_up_password_confirm">
             {fields?.passwordConfirm.label || "Confirm Password"}
             <input
               type="password"
