@@ -25,7 +25,7 @@ import { FirebaseService } from "../../services/firebase.service";
 interface Props {
   firebaseConfig: string;
   onAuth$?: QRL<(user: UserModel) => void>;
-  onUnAuth$?: QRL<() => void>;
+  onUnAuth$?: QRL<(delayed: boolean) => void>;
   onError$?: QRL<(error?: any) => void>;
 }
 
@@ -86,7 +86,7 @@ export const Auth = component$<Props>(
 
             onAuth$?.(_user);
           } else {
-            onUnAuth$?.();
+            onUnAuth$?.(false);
           }
 
           onAuthStateChanged(
@@ -111,7 +111,7 @@ export const Auth = component$<Props>(
 
                 onAuth$?.(_user);
               } else {
-                onUnAuth$?.();
+                onUnAuth$?.(true);
               }
             },
             (error: any) => {
