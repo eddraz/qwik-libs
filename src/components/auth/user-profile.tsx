@@ -55,10 +55,6 @@ export const UserProfile = component$<Props>(
                     : "chevron-down";
               }}
             >
-              <span>
-                <strong>{(user || _user).displayName}</strong>
-                <small>{(user || _user).email}</small>
-              </span>
               {(user || _user).photoURL && (
                 <OptimizedImage
                   src={(user || _user).photoURL || undefined}
@@ -67,6 +63,10 @@ export const UserProfile = component$<Props>(
                   height={30}
                 />
               )}
+              <span>
+                <strong>{(user || _user).displayName}</strong>
+                <small>{(user || _user).email}</small>
+              </span>
               {toggleIcon.value && (
                 <TablerIcon name={toggleIcon.value} size={25} />
               )}
