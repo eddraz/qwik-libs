@@ -1,6 +1,8 @@
 export interface EpaycoConfigI {
   key?: string;
   test?: boolean;
+  external: "true" | "false";
+  methodsDisable: "TDC" | "PSE" | "SP" | "CASH" | "DP"[];
 }
 
 //Parametros compra (obligatorio)
@@ -18,12 +20,11 @@ export interface EpaycoProductI {
 }
 
 export interface EpaycoOptionalI {
-  external: "true" | "false";
   extra1?: string; // "extra1"
   extra2?: string; // "extra2"
   extra3?: string; // "extra3"
-  confirmation: string; // "http://secure2.payco.co/prueba_curl.php"
-  response: string; // "http://secure2.payco.co/prueba_curl.php"
+  confirmation?: string; // "http://secure2.payco.co/prueba_curl.php"
+  response?: string; // "http://secure2.payco.co/prueba_curl.php"
 }
 
 export interface EpaycoCustomerI {

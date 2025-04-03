@@ -167,7 +167,6 @@ export default component$(() => {
               methodsDisable: [],
             }}
             optional={{
-              external: "true",
               confirmation: "https://speckuix.page/",
               response: "https://speckuix.page/",
             }}
