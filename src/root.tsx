@@ -24,7 +24,7 @@ export const firebaseConfig = Crypter.encrypt(
 );
 export const epaycoConfig = Crypter.encrypt(
   JSON.stringify({
-    key: "93451b4bb7263b285ce2577efa3b3844",
+    key: "93451b4bb7263b285ce2577efa3b3844", // PUBLIC KEY
     test: true,
   }),
 );
