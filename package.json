@@ -1,7 +1,7 @@
 {
-  "name": "qwik-libs",
-  "version": "0.1.22",
-  "description": "Create a reusable Qwik component library",
+  "name": "my-qwik-library-name",
+  "version": "0.0.1",
+  "description": "Create a Qwik library",
   "main": "./lib/index.qwik.mjs",
   "qwik": "./lib/index.qwik.mjs",
   "types": "./lib-types/index.d.ts",
@@ -36,39 +36,28 @@
     "qwik": "qwik"
   },
   "devDependencies": {
-    "@builder.io/qwik": "1.5.1",
-    "@types/eslint": "^8.56.5",
-    "@typescript-eslint/eslint-plugin": "^7.1.0",
-    "@typescript-eslint/parser": "^7.1.0",
-    "autoprefixer": "^10.4.14",
-    "crypto-ts": "^1.0.2",
-    "eslint": "^8.57.0",
-    "eslint-plugin-qwik": "latest",
-    "firebase": "^10.9.0",
+    "@builder.io/qwik": "1.13.0",
+    "@qwikest/icons": "^0.0.13",
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/eslint": "8.56.10",
+    "@types/node": "20.14.11",
+    "@typescript-eslint/eslint-plugin": "7.16.1",
+    "@typescript-eslint/parser": "7.16.1",
+    "eslint": "8.57.0",
+    "eslint-plugin-qwik": "1.13.0",
+    "firebase": "^11.6.0",
     "np": "^8.0.4",
-    "postcss": "^8.4.31",
-    "prettier": "^3.2.5",
-    "prettier-plugin-tailwindcss": "^0.5.4",
-    "qwik-image": "^0.0.8",
-    "tailwindcss": "3.3.3",
-    "typescript": "5.3.3",
+    "prettier": "3.3.3",
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "qwik-image": "^0.0.16",
+    "tailwindcss": "^4.0.0",
+    "typescript": "5.4.5",
     "undici": "*",
     "unique-names-generator": "^4.7.1",
-    "vite": "^5.1.4",
+    "vite": "5.3.5",
     "vite-tsconfig-paths": "^4.2.1"
   },
-  "peerDependencies": {
-    "@builder.io/qwik": "1.5.1",
-    "autoprefixer": "^10.4.14",
-    "crypto-ts": "^1.0.2",
-    "firebase": "^10.9.0",
-    "postcss": "^8.4.31",
-    "prettier-plugin-tailwindcss": "^0.5.4",
-    "qwik-lib-tabler-icons": "^0.0.11",
-    "tailwindcss": "3.3.3",
-    "unique-names-generator": "^4.7.1"
-  },
   "dependencies": {
-    "qwik-lib-tabler-icons": "^0.0.11"
+    "@std/encoding": "npm:@jsr/std__encoding@^1.0.8"
   }
 }

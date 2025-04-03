@@ -53,14 +53,17 @@ export const Epayco = component$<Props>(
           onClick$={(event, elem) => {
             onClick$?.(event, elem);
 
-            const handler = ePayco.checkout.configure(config$);
+            const handler = ePayco.checkout.configure({
+              key: config$.key,
+              test: config$.test,
+            });
 
             handler.open({
               //Parametros compra (obligatorio)
               ...product,
 
               //Onpage="false" - Standard="true"
-              external: config$.external,
+              external: optional?.external,
 
               //Atributos opcionales
               ...optional,
@@ -68,8 +71,11 @@ export const Epayco = component$<Props>(
               //Atributos cliente
               ...customer,
 
-              //atributo deshabilitación método de pago
-              methodsDisable: config$.methodsDisable,
+              extra1: optional?.extra1 || "",
+              extra2: optional?.extra2 || "",
+              extra3: optional?.extra3 || "",
+              confirmation: optional?.confirmation || "",
+              response: optional?.response || "",
             });
           }}
         >

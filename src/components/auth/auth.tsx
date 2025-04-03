@@ -18,9 +18,9 @@ import {
 import { FirebaseConfigModel } from "../../models/firebase-config.model";
 import { UserModel } from "../../models/user.model";
 
-import { CRYPTER } from "../../utils/crypter.util";
 import { removeAccents } from "../../utils/remove-accents.util";
 import { FirebaseService } from "../../services/firebase.service";
+import { Crypter } from "../../utils/crypter.util";
 
 interface Props {
   firebaseConfig: string;
@@ -46,7 +46,7 @@ export const Auth = component$<Props>(
 
     useContextProvider(
       FirebaseContext,
-      JSON.parse(CRYPTER.decrypt(firebaseConfig)),
+      JSON.parse(Crypter.decrypt(firebaseConfig)),
     );
     useContextProvider(UserContext, {});
     useContextProvider(UserDisplayNameContext, displayName);

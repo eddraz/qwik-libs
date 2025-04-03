@@ -1,8 +1,6 @@
 export interface EpaycoConfigI {
   key?: string;
   test?: boolean;
-  external: "true" | "false";
-  methodsDisable: "TDC" | "PSE" | "SP" | "CASH" | "DP"[];
 }
 
 //Parametros compra (obligatorio)
@@ -20,9 +18,10 @@ export interface EpaycoProductI {
 }
 
 export interface EpaycoOptionalI {
-  extra1: string; // "extra1"
-  extra2: string; // "extra2"
-  extra3: string; // "extra3"
+  external: "true" | "false";
+  extra1?: string; // "extra1"
+  extra2?: string; // "extra2"
+  extra3?: string; // "extra3"
   confirmation: string; // "http://secure2.payco.co/prueba_curl.php"
   response: string; // "http://secure2.payco.co/prueba_curl.php"
 }
@@ -33,4 +32,5 @@ export interface EpaycoCustomerI {
   type_doc_billing: string; //"cc"
   mobilephone_billing: string; //"3050000000"
   number_doc_billing: string; //"100000000"
+  methodsDisable?: "TDC" | "PSE" | "SP" | "CASH" | "DP"[];
 }

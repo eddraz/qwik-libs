@@ -1,13 +1,16 @@
-import { AES, enc } from "crypto-ts";
-
 export class Crypter {
-  encrypt(message: string | object | number | Array<any>) {
-    return AES.encrypt(JSON.stringify(message), "test").toString();
+  static encrypt(input: string) {
+    return new TextEncoder().encode(input);
   }
 
-  decrypt(message: string) {
-    return AES.decrypt(message.toString(), "test").toString(enc.Utf8);
+  static decrypt(input: string | AllowSharedBufferSource) {
+    if (typeof input === 'string') {
+      // Si es un string, convertirlo a un buffer
+      return input;
+    }
+    // Si ya es un buffer, decodificarlo
+    return new TextDecoder().decode(input);
   }
 }
 
-export const CRYPTER = new Crypter();
+export const CRYPTER = Crypter;

@@ -1,48 +1,45 @@
-import { TablerIcon } from "qwik-lib-tabler-icons";
-
-import { Auth } from "./components/auth/auth";
-import { ForgotPasswordForm } from "./components/auth/forgot-password-form";
-import { GoogleAuthenticator } from "./components/auth/google-authenticator";
-import { SignUpForm } from "./components/auth/sign-up-form";
-import { SigninForm } from "./components/auth/signin-form";
-import { SigninPhone } from "./components/auth/signin-phone";
-import { UserProfile } from "./components/auth/user-profile";
-import { Pay } from "./components/pay/pay";
 import { component$, useSignal } from "@builder.io/qwik";
 import { UserModel } from "./models/user.model";
+import { Crypter } from "./utils/crypter.util";
+import { Auth } from "./components/auth/auth";
+import { UserProfile } from "./components/auth/user-profile";
+import { GoogleAuthenticator } from "./components/auth/google-authenticator";
+import { TbBrandGoogle } from "@qwikest/icons/tablericons";
+import { SignUpForm } from "./components/auth/sign-up-form";
+import { SigninForm } from "./components/auth/signin-form";
+import { ForgotPasswordForm } from "./components/auth/forgot-password-form";
+import { SigninPhone } from "./components/auth/signin-phone";
+import { Pay } from "./components/pay/pay";
 
-import { CRYPTER } from "./utils/crypter.util";
-
-import "./global.css";
-
-export const firebaseConfig = CRYPTER.encrypt({
-  apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY,
-  authDomain: import.meta.env.PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.PUBLIC_FIREBASE_APP_ID,
-  measurementId: import.meta.env.PUBLIC_FIREBASE_MEASUREMENT_ID,
-});
-export const epaycoConfig = CRYPTER.encrypt({
-  key: "45b960805ced5c27ce34b1600b4b9f54",
-  test: true,
-  external: "true",
-  methodsDisable: [],
-});
+export const firebaseConfig = Crypter.encrypt(
+  JSON.stringify({
+    apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY,
+    authDomain: import.meta.env.PUBLIC_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.PUBLIC_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.PUBLIC_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.PUBLIC_FIREBASE_APP_ID,
+    measurementId: import.meta.env.PUBLIC_FIREBASE_MEASUREMENT_ID,
+  }),
+);
+export const epaycoConfig = Crypter.encrypt(
+  JSON.stringify({
+    key: "93451b4bb7263b285ce2577efa3b3844",
+    test: true,
+  }),
+);
 
 export default component$(() => {
-  const _user = useSignal<UserModel | undefined>();
-
+  const _user = useSignal<UserModel>();
   return (
     <>
       <head>
-        <meta charSet="utf-8" />
+        <meta charset="utf-8" />
         <title>Qwik Blank App</title>
       </head>
       <body>
         <Auth
-          firebaseConfig={firebaseConfig}
+          firebaseConfig={Crypter.decrypt(firebaseConfig)}
           onAuth$={(user) => {
             _user.value = user;
           }}
@@ -55,7 +52,7 @@ export default component$(() => {
           />
         </Auth>
         <Auth
-          firebaseConfig={firebaseConfig}
+          firebaseConfig={Crypter.decrypt(firebaseConfig)}
           onAuth$={(user) => {
             _user.value = user;
           }}
@@ -66,11 +63,11 @@ export default component$(() => {
             }}
           >
             Signin with Google
-            <TablerIcon name="brand-google" color="#ffffff" size={24} />
+            <TbBrandGoogle class="size-6 text-white" />
           </GoogleAuthenticator>
         </Auth>
         <Auth
-          firebaseConfig={firebaseConfig}
+          firebaseConfig={Crypter.decrypt(firebaseConfig)}
           onAuth$={(user) => {
             _user.value = user;
           }}
@@ -142,18 +139,17 @@ export default component$(() => {
           </h1>
           <SigninPhone />
         </Auth>
-
         <main class="p-5">
           <h1 class="my-10 border-b-2 border-b-zinc-400 py-8 text-5xl">
             Pagos en linea
           </h1>
           <Pay
             class="btn btn-primary"
-            config={epaycoConfig}
+            config={Crypter.decrypt(epaycoConfig)}
             product={{
               name: "Vestido Mujer Primavera",
               description: "Vestido Mujer Primavera",
-              invoice: "FAC-1234",
+              invoice: "FAC-2222",
               currency: "cop",
               amount: "5000",
               tax_base: "4000",
@@ -168,6 +164,12 @@ export default component$(() => {
               type_doc_billing: "cc",
               mobilephone_billing: "3050000000",
               number_doc_billing: "100000000",
+              methodsDisable: [],
+            }}
+            optional={{
+              external: "true",
+              confirmation: "http://localhost:3000",
+              response: "http://localhost:3000",
             }}
           >
             Pagar

@@ -1,7 +1,6 @@
 import { FirebaseError } from "firebase/app";
 import { getAuth, signOut } from "firebase/auth";
-import { TablerIcon } from "qwik-lib-tabler-icons";
-
+import { TbChevronDown, TbChevronUp } from "@qwikest/icons/tablericons";
 import {
   QRL,
   component$,
@@ -67,8 +66,11 @@ export const UserProfile = component$<Props>(
                 <strong>{(user || _user).displayName}</strong>
                 <small>{(user || _user).email}</small>
               </span>
-              {toggleIcon.value && (
-                <TablerIcon name={toggleIcon.value} size={25} />
+              {toggleIcon.value === "chevron-down" && (
+                <TbChevronDown class="size-6" />
+              )}
+              {toggleIcon.value === "chevron-up" && (
+                <TbChevronUp class="size-6" />
               )}
             </button>
             {toggleList.value && (
