@@ -149,7 +149,7 @@ export default component$(() => {
             product={{
               name: "Vestido Mujer Primavera",
               description: "Vestido Mujer Primavera",
-              invoice: "FAC-2222",
+              invoice: "FAC-6666",
               currency: "cop",
               amount: "5000",
               tax_base: "4000",
@@ -168,8 +168,8 @@ export default component$(() => {
             }}
             optional={{
               external: "true",
-              confirmation: "http://localhost:3000",
-              response: "http://localhost:3000",
+              confirmation: "https://speckuix.page/",
+              response: "https://speckuix.page/",
             }}
           >
             Pagar
