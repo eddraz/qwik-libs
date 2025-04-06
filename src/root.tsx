@@ -38,6 +38,18 @@ export default component$(() => {
         <title>Qwik Blank App</title>
       </head>
       <body>
+        {/* figure tag: Sirve para agrupar imagenes, gráficos, gifs, videos, audio, multimedia... con descripción */}
+        <figure>
+          <img
+            src="https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg"
+            alt="Paisaje montañoso"
+            width={800}
+            height={600}
+            loading="lazy"
+            decoding="async"
+          />
+          <figcaption>Vista de las montañas al atardecer.</figcaption>
+        </figure>
         <Auth
           firebaseConfig={Crypter.decrypt(firebaseConfig)}
           onAuth$={(user) => {
