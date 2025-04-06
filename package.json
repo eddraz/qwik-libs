@@ -37,7 +37,9 @@
   },
   "devDependencies": {
     "@builder.io/qwik": "1.13.0",
+    "@codev-trive/utils": "npm:@jsr/codev-trive__utils@^0.1.9",
     "@qwikest/icons": "^0.0.13",
+    "@std/encoding": "npm:@jsr/std__encoding@^1.0.8",
     "@tailwindcss/vite": "^4.0.0",
     "@types/eslint": "8.56.10",
     "@types/node": "20.14.11",
@@ -56,9 +58,5 @@
     "unique-names-generator": "^4.7.1",
     "vite": "5.3.5",
     "vite-tsconfig-paths": "^4.2.1"
-  },
-  "dependencies": {
-    "@codev-trive/utils": "npm:@jsr/codev-trive__utils@^0.1.9",
-    "@std/encoding": "npm:@jsr/std__encoding@^1.0.8"
   }
 }
