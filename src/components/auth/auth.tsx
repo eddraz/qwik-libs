@@ -15,12 +15,12 @@ import {
   useContextProvider,
   useVisibleTask$,
 } from "@builder.io/qwik";
+import { Accents } from "@codev-trive/utils";
 import { FirebaseConfigModel } from "../../models/firebase-config.model";
 import { UserModel } from "../../models/user.model";
 
-import { removeAccents } from "../../utils/remove-accents.util";
-import { FirebaseService } from "../../services/firebase.service";
 import { Crypter } from "../../utils/crypter.util";
+import { FirebaseService } from "../../services/firebase.service";
 
 interface Props {
   firebaseConfig: string;
@@ -28,6 +28,8 @@ interface Props {
   onUnAuth$?: QRL<(delayed: boolean) => void>;
   onError$?: QRL<(error?: any) => void>;
 }
+
+const ACCENTS = new Accents();
 
 export const FirebaseContext = createContextId<FirebaseConfigModel>("firebase");
 export const UserContext = createContextId<UserModel>("user");
@@ -52,7 +54,7 @@ export const Auth = component$<Props>(
     useContextProvider(UserDisplayNameContext, displayName);
     useContextProvider(
       UserPhotoUrlContext,
-      `https://robohash.org/${removeAccents(displayName)
+      `https://robohash.org/${ACCENTS.removeDiacritics(displayName)
         .toLowerCase()
         .replace(/ /g, "-")}`,
     );
